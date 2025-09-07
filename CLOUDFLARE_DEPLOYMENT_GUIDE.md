@@ -148,3 +148,6 @@ Cloudflare Pages automatically deploys when you:
 ---
 
 **Note**: This website uses server-side features and API routes. Cloudflare Pages fully supports Next.js applications with these features.
+
+---
+*Last updated: September 2025*
