@@ -67,7 +67,7 @@ export default async function ServicesPage() {
                   {service.image && (
                     <div className="aspect-[16/10] rounded-xl overflow-hidden mb-6 bg-gradient-to-br from-gray-100 to-gray-200">
                       <Image
-                        src={service.image?.asset?.url || ''}
+                        src={service.image || ''}
                         alt={service.title}
                         width={400}
                         height={250}

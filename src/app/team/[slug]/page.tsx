@@ -10,11 +10,12 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
 import { Metadata } from 'next'
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const doctor = await getTeamMember(params.slug)
+  const { slug } = await params
+  const doctor = await getTeamMember(slug)
   
   if (!doctor) {
     return {
@@ -30,16 +31,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title,
     description,
     seo: doctor?.seo,
-    slug: `/team/${params.slug}`,
+    slug: `/team/${slug}`,
     imageUrl: doctor?.photo,
   })
 }
 
 export default async function TeamMemberPage({ params }: Props) {
-  let doctor = await getTeamMember(params.slug)
+  const { slug } = await params
+  let doctor = await getTeamMember(slug)
 
   // If no team member found and slug is 'edward-obryan', try to get featured doctor
-  if (!doctor && params.slug === 'edward-obryan') {
+  if (!doctor && slug === 'edward-obryan') {
     const featuredDoctor = await getFeaturedDoctor()
     if (featuredDoctor) {
       // Create a mock team member structure from featured doctor
@@ -51,13 +53,13 @@ export default async function TeamMemberPage({ params }: Props) {
   }
 
   // If still no doctor found, create fallback for edward-obryan
-  if (!doctor && params.slug === 'edward-obryan') {
+  if (!doctor && slug === 'edward-obryan') {
     doctor = {
       _id: 'fallback-edward-obryan',
       name: 'Mr Edward O\'Bryan',
       slug: { current: 'edward-obryan' },
       title: 'Orthopaedic Surgeon',
-      photo: null,
+      photo: undefined,
       bio: [
         {
           _type: 'block',
