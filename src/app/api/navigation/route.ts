@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { getNavigationData } from '@/lib/sanity-queries'
 
+export const runtime = 'edge'
+
 export async function GET() {
   try {
     const navigationData = await getNavigationData()

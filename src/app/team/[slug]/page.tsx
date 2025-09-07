@@ -9,6 +9,8 @@ import { PortableText } from '@portabletext/react'
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
 import { Metadata } from 'next'
 
+export const runtime = 'edge'
+
 type Props = {
   params: Promise<{ slug: string }>
 }
