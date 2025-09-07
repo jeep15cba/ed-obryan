@@ -75,6 +75,12 @@ export const service = defineType({
       type: 'boolean',
       initialValue: false,
     }),
+    defineField({
+      name: 'seo',
+      title: 'SEO Settings',
+      type: 'seo',
+      description: 'SEO settings for this service page',
+    }),
   ],
   preview: {
     select: {

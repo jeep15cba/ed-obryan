@@ -3,7 +3,7 @@ import { getCondition, getConditionsByService } from '@/lib/sanity-queries'
 import type { Condition } from '@/types/sanity'
 import { Container } from '@/components/ui/container'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle, Clock, Users, Award, ArrowRight, Phone, Stethoscope } from 'lucide-react'
+import { ArrowLeft, CheckCircle, Clock, Users, Award, ArrowRight, Phone, Activity } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
@@ -15,7 +15,7 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  const conditions = await getConditionsByService('conditions')
+  const conditions = await getConditionsByService('sport-knee-surgery')
   return conditions.map((condition: Condition) => ({
     slug: condition.slug.current,
   }))
@@ -27,24 +27,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   if (!condition) {
     return {
-      title: 'Condition Not Found',
-      description: 'The requested condition could not be found.',
+      title: 'Procedure Not Found',
+      description: 'The requested procedure could not be found.',
     }
   }
 
-  const title = condition.seo?.metaTitle || `${condition.title} - Conditions | Mr Edward O'Bryan`
-  const description = condition.seo?.metaDescription || `Expert ${condition.title} treatment by Mr Edward O'Bryan. Advanced orthopaedic care for optimal patient outcomes.`
+  const title = condition.seo?.metaTitle || `${condition.title} - Sport Knee Surgery | Mr Edward O'Bryan`
+  const description = condition.seo?.metaDescription || `Expert ${condition.title} surgery by Mr Edward O'Bryan. Advanced sports medicine techniques for optimal recovery and return to performance.`
 
   return generateSEOMetadata({
     title,
     description,
     seo: condition.seo,
-    slug: `/conditions/${slug}`,
+    slug: `/sport-knee-surgery/${slug}`,
     imageUrl: condition.heroImage,
   })
 }
 
-export default async function ConditionPage({ params }: Props) {
+export default async function SportKneeProcedurePage({ params }: Props) {
   const { slug } = await params
   const condition = await getCondition(slug)
 
@@ -71,25 +71,25 @@ export default async function ConditionPage({ params }: Props) {
                 Home
               </Link>
               <span>/</span>
-              <Link href="/conditions" className="hover:text-white transition-colors">
-                Conditions
+              <Link href="/sport-knee-surgery" className="hover:text-white transition-colors">
+                Sport Knee Surgery
               </Link>
               <span>/</span>
               <span className="text-white">{condition.title}</span>
             </nav>
 
             <Link 
-              href="/conditions" 
+              href="/sport-knee-surgery" 
               className="inline-flex items-center text-blue-100 hover:text-white mb-8 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Conditions
+              Back to Sport Knee Surgery
             </Link>
 
             <div className="max-w-4xl">
               {/* Service Icon */}
               <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6">
-                <Stethoscope className="w-10 h-10 text-white" />
+                <Activity className="w-10 h-10 text-white" />
               </div>
 
               {/* Title */}
@@ -99,7 +99,7 @@ export default async function ConditionPage({ params }: Props) {
 
               {/* Description */}
               <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-2xl">
-                {condition.shortDescription || 'Expert orthopaedic treatment for optimal patient outcomes.'}
+                {condition.shortDescription || 'Advanced surgical treatment for sports-related knee injuries, helping athletes return to peak performance.'}
               </p>
 
               {/* CTA Buttons */}
@@ -151,11 +151,11 @@ export default async function ConditionPage({ params }: Props) {
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-16">
                 <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                  <Stethoscope className="w-4 h-4" />
-                  Conditions
+                  <Activity className="w-4 h-4" />
+                  Sport Knee Surgery
                 </div>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
-                  Condition Overview
+                  Procedure Overview
                 </h2>
               </div>
               <div className="prose prose-lg max-w-none">
@@ -176,7 +176,7 @@ export default async function ConditionPage({ params }: Props) {
                   Symptoms & Indications
                 </h2>
                 <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                  Key symptoms and indicators that may require treatment for this condition.
+                  Key symptoms and indicators that may require this surgical procedure.
                 </p>
               </div>
 
@@ -217,7 +217,7 @@ export default async function ConditionPage({ params }: Props) {
                     <div>
                       <h3 className="font-semibold text-gray-900 text-lg mb-2">{treatment}</h3>
                       <p className="text-gray-600 text-sm">
-                        Advanced orthopaedic techniques tailored to your specific condition.
+                        Advanced surgical techniques tailored to sports medicine and athletic recovery.
                       </p>
                     </div>
                   </div>
@@ -251,7 +251,7 @@ export default async function ConditionPage({ params }: Props) {
                   Recovery & Rehabilitation
                 </h2>
                 <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                  Your journey to optimal recovery and long-term health.
+                  Your journey back to peak athletic performance.
                 </p>
               </div>
               <div className="prose prose-lg max-w-none">
@@ -270,8 +270,8 @@ export default async function ConditionPage({ params }: Props) {
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
                 <Users className="w-8 h-8 text-blue-600" />
               </div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">1000+</div>
-              <p className="text-gray-600">Patients Treated</p>
+              <div className="text-4xl font-bold text-gray-900 mb-2">500+</div>
+              <p className="text-gray-600">Athletes Treated</p>
             </div>
             <div className="p-8">
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
@@ -284,34 +284,34 @@ export default async function ConditionPage({ params }: Props) {
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
                 <Award className="w-8 h-8 text-blue-600" />
               </div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">98%</div>
-              <p className="text-gray-600">Success Rate</p>
+              <div className="text-4xl font-bold text-gray-900 mb-2">95%</div>
+              <p className="text-gray-600">Return to Sport</p>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* Related Conditions */}
+      {/* Related Procedures */}
       <section className="py-20 bg-white">
         <Container>
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
-                Related Conditions
+                Related Sport Knee Procedures
               </h2>
               <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                Explore other conditions we treat with our comprehensive orthopaedic care.
+                Explore other advanced procedures we offer for sports-related knee injuries.
               </p>
             </div>
 
             <div className="text-center">
-              <Link href="/conditions">
+              <Link href="/sport-knee-surgery">
                 <Button 
                   size="lg" 
                   variant="outline"
                   className="px-8 py-4 h-auto text-lg"
                 >
-                  View All Conditions
+                  View All Procedures
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
@@ -325,7 +325,7 @@ export default async function ConditionPage({ params }: Props) {
         <Container>
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6 font-sans">
-              Ready to Take the Next Step?
+              Ready to Get Back in the Game?
             </h2>
             <p className="text-xl text-blue-100 mb-8">
               Schedule a consultation with Mr O&apos;Bryan to discuss your {condition.title.toLowerCase()} and develop a personalized treatment plan.

@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { richTextConfig } from './richTextConfig'
 
 export const condition = defineType({
   name: 'condition',
@@ -57,9 +58,17 @@ export const condition = defineType({
     defineField({
       name: 'overview',
       title: 'Overview',
-      type: 'text',
-      rows: 4,
-      description: 'Detailed overview of the condition/procedure',
+      type: 'array',
+      of: [
+        {
+          type: 'block',
+          styles: richTextConfig.styles,
+          lists: richTextConfig.lists,
+          marks: richTextConfig.marks,
+        },
+        ...richTextConfig.of
+      ],
+      description: 'Detailed overview with rich formatting, links, and media',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -251,17 +260,10 @@ export const condition = defineType({
       description: 'Show this condition in featured sections',
     }),
     defineField({
-      name: 'seoTitle',
-      title: 'SEO Title',
-      type: 'string',
-      description: 'Title for search engines (optional)',
-    }),
-    defineField({
-      name: 'seoDescription',
-      title: 'SEO Description',
-      type: 'text',
-      rows: 2,
-      description: 'Description for search engines (optional)',
+      name: 'seo',
+      title: 'SEO Settings',
+      type: 'seo',
+      description: 'SEO settings for this condition page',
     }),
   ],
   preview: {

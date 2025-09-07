@@ -1,3 +1,12 @@
+export interface SEO {
+  metaTitle?: string
+  metaDescription?: string
+  keywords?: string[]
+  ogImage?: string
+  noIndex?: boolean
+  canonicalUrl?: string
+}
+
 export interface Service {
   _id: string
   title: string
@@ -5,16 +14,11 @@ export interface Service {
   description: string
   shortDescription?: string
   icon?: string
-  image?: {
-    asset: {
-      _ref: string
-      url: string
-    }
-    alt?: string
-  }
+  image?: string
   features: string[]
   content: any[]
   featured: boolean
+  seo?: SEO
 }
 
 export interface TeamMember {
@@ -22,24 +26,15 @@ export interface TeamMember {
   name: string
   slug: { current: string }
   title: string
-  photo: {
-    asset: {
-      _ref: string
-      url: string
-    }
-    alt?: string
-  }
-  bio: string
+  photo?: string
+  bio: any[]
   specialties: string[]
   credentials: string[]
-  education: {
-    degree: string
-    school: string
-    year: string
-  }[]
-  experience: number
+  education: string[]
+  experience: string[]
   featured: boolean
   order: number
+  seo?: SEO
 }
 
 export interface Testimonial {
@@ -73,8 +68,7 @@ export interface BlogPost {
   tags: string[]
   content: any[]
   featured: boolean
-  seoTitle?: string
-  seoDescription?: string
+  seo?: SEO
 }
 
 export interface Condition {
@@ -93,7 +87,7 @@ export interface Condition {
     }
     alt?: string
   }
-  overview?: string
+  overview?: any[]
   symptoms?: string[]
   causes?: string[]
   diagnosis?: Array<{
@@ -120,6 +114,104 @@ export interface Condition {
     answer: string
   }>
   featured?: boolean
-  seoTitle?: string
-  seoDescription?: string
+  seo?: SEO
+}
+
+export interface NavigationDropdownItem {
+  name: string
+  href: string
+  description?: string
+}
+
+export interface NavigationItem {
+  name: string
+  href: string
+  dropdown?: NavigationDropdownItem[]
+}
+
+export interface SanityNavigationService {
+  _id: string
+  title: string
+  slug: {
+    current: string
+  }
+  conditions: Array<{
+    _id: string
+    title: string
+    slug: {
+      current: string
+    }
+    featured: boolean
+  }>
+}
+
+export interface SanityNavigationItem {
+  title: string
+  href: string
+  order: number
+  hasDropdown: boolean
+  dropdownItems: Array<{
+    _key: string
+    title: string
+    href: string
+  }> | null
+  autoPopulate: {
+    enabled: boolean
+    contentType: string
+    pathPrefix: string
+    limit: number
+  } | null
+  isActive: boolean
+}
+
+export interface SanityNavigationData {
+  navigationItems?: SanityNavigationItem[]
+  services: SanityNavigationService[]
+}
+
+export interface Navigation {
+  _id: string
+  title: string
+  items: NavigationItem[]
+  isActive: boolean
+  lastUpdated: string
+}
+
+export interface AboutPage {
+  _id: string
+  title: string
+  slug: { current: string }
+  heroTitle?: string
+  heroSubtitle?: string
+  heroDescription?: string
+  heroImage?: {
+    asset: {
+      _ref: string
+      url: string
+    }
+    alt?: string
+  }
+  mainContent?: any[]
+  achievements?: Array<{
+    title: string
+    description: string
+    icon?: string
+  }>
+  philosophyTitle?: string
+  philosophySubtitle?: string
+  philosophyDescription?: string
+  philosophyPoints?: Array<{
+    title: string
+    description: string
+    icon?: string
+  }>
+  statistics?: Array<{
+    number: string
+    label: string
+    icon?: string
+  }>
+  ctaTitle?: string
+  ctaDescription?: string
+  featured?: boolean
+  seo?: SEO
 }

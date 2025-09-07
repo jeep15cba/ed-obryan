@@ -1,54 +1,33 @@
 import { notFound } from 'next/navigation'
-import { getCondition, getConditionsByService } from '@/lib/sanity-queries'
-import type { Condition } from '@/types/sanity'
+import { getServiceWithConditions } from '@/lib/sanity-queries'
 import { Container } from '@/components/ui/container'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle, Clock, Users, Award, ArrowRight, Phone, Stethoscope } from 'lucide-react'
+import { ArrowLeft, CheckCircle, Clock, Users, Award, ArrowRight, Phone, Activity } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { PortableText } from '@portabletext/react'
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
 import { Metadata } from 'next'
 
-type Props = {
-  params: Promise<{ slug: string }>
-}
-
-export async function generateStaticParams() {
-  const conditions = await getConditionsByService('conditions')
-  return conditions.map((condition: Condition) => ({
-    slug: condition.slug.current,
-  }))
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const condition = await getCondition(slug)
+export async function generateMetadata(): Promise<Metadata> {
+  const serviceData = await getServiceWithConditions('sport-knee-surgery')
   
-  if (!condition) {
-    return {
-      title: 'Condition Not Found',
-      description: 'The requested condition could not be found.',
-    }
-  }
-
-  const title = condition.seo?.metaTitle || `${condition.title} - Conditions | Mr Edward O'Bryan`
-  const description = condition.seo?.metaDescription || `Expert ${condition.title} treatment by Mr Edward O'Bryan. Advanced orthopaedic care for optimal patient outcomes.`
-
+  const title = serviceData?.seo?.metaTitle || `${serviceData?.title || 'Sport Knee Surgery'} - Advanced Sports Injury Treatment Melbourne`
+  const description = serviceData?.seo?.metaDescription || `Expert sports knee surgery by Mr Edward O'Bryan. ACL reconstruction, meniscal repair, and arthroscopic procedures for athletes. Return to peak performance.`
+  
   return generateSEOMetadata({
     title,
     description,
-    seo: condition.seo,
-    slug: `/conditions/${slug}`,
-    imageUrl: condition.heroImage,
+    seo: serviceData?.seo,
+    slug: '/sport-knee-surgery',
+    imageUrl: serviceData?.image,
   })
 }
 
-export default async function ConditionPage({ params }: Props) {
-  const { slug } = await params
-  const condition = await getCondition(slug)
+export default async function SportKneeSurgeryPage() {
+  const serviceData = await getServiceWithConditions('sport-knee-surgery')
 
-  if (!condition) {
+  if (!serviceData) {
     notFound()
   }
 
@@ -66,40 +45,28 @@ export default async function ConditionPage({ params }: Props) {
         <Container>
           <div className="relative z-10">
             {/* Breadcrumb */}
-            <nav className="flex items-center space-x-2 text-blue-100 mb-8">
-              <Link href="/" className="hover:text-white transition-colors">
-                Home
-              </Link>
-              <span>/</span>
-              <Link href="/conditions" className="hover:text-white transition-colors">
-                Conditions
-              </Link>
-              <span>/</span>
-              <span className="text-white">{condition.title}</span>
-            </nav>
-
             <Link 
-              href="/conditions" 
+              href="/" 
               className="inline-flex items-center text-blue-100 hover:text-white mb-8 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Conditions
+              Back to Home
             </Link>
 
             <div className="max-w-4xl">
               {/* Service Icon */}
               <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6">
-                <Stethoscope className="w-10 h-10 text-white" />
+                <Activity className="w-10 h-10 text-white" />
               </div>
 
               {/* Title */}
               <h1 className="text-4xl lg:text-6xl font-bold mb-6 font-sans leading-tight">
-                {condition.title}
+                {serviceData.title || 'Sport Knee Surgery'}
               </h1>
 
               {/* Description */}
               <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-2xl">
-                {condition.shortDescription || 'Expert orthopaedic treatment for optimal patient outcomes.'}
+                {serviceData.description || 'Advanced surgical treatments for sports-related knee injuries, helping athletes return to peak performance.'}
               </p>
 
               {/* CTA Buttons */}
@@ -127,14 +94,14 @@ export default async function ConditionPage({ params }: Props) {
         </Container>
       </section>
 
-      {/* Hero Image Section */}
-      {condition.heroImage && (
+      {/* Service Image Section */}
+      {serviceData.image && (
         <section className="py-16 bg-gray-50">
           <Container>
             <div className="aspect-[16/9] rounded-2xl overflow-hidden relative bg-gradient-to-br from-gray-100 to-gray-200">
               <Image
-                src={condition.heroImage}
-                alt={condition.title}
+                src={serviceData.image}
+                alt={serviceData.title}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
@@ -144,52 +111,60 @@ export default async function ConditionPage({ params }: Props) {
         </section>
       )}
 
-      {/* Overview Section */}
-      {condition.overview && (
+      {/* Related Conditions/Procedures Section */}
+      {serviceData.conditions && serviceData.conditions.length > 0 && (
         <section className="py-20 bg-white">
           <Container>
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <div className="text-center mb-16">
                 <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
-                  <Stethoscope className="w-4 h-4" />
-                  Conditions
+                  <CheckCircle className="w-4 h-4" />
+                  Procedures We Perform
                 </div>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
-                  Condition Overview
-                </h2>
-              </div>
-              <div className="prose prose-lg max-w-none">
-                <PortableText value={condition.overview || []} />
-              </div>
-            </div>
-          </Container>
-        </section>
-      )}
-
-      {/* Symptoms Section */}
-      {condition.symptoms && condition.symptoms.length > 0 && (
-        <section className="py-20 bg-gray-50">
-          <Container>
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
-                  Symptoms & Indications
+                  Sport Knee Surgery Procedures
                 </h2>
                 <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                  Key symptoms and indicators that may require treatment for this condition.
+                  Our specialized procedures help athletes recover from knee injuries and return to their sport stronger than before.
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {condition.symptoms.map((symptom: string, index: number) => (
-                  <div key={index} className="flex items-start gap-4 p-6 bg-white rounded-xl shadow-sm">
-                    <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                      <CheckCircle className="w-4 h-4 text-blue-600" />
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {serviceData.conditions.map((condition: any) => (
+                  <Link key={condition._id} href={`/sport-knee-surgery/${condition.slug.current}`}>
+                    <div className="group bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all duration-200 hover:shadow-lg border border-transparent hover:border-blue-100">
+                      {condition.heroImage && (
+                        <div className="aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-gradient-to-br from-gray-100 to-gray-200">
+                          <Image
+                            src={condition.heroImage.asset.url}
+                            alt={condition.heroImage.alt || condition.title}
+                            width={400}
+                            height={300}
+                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
+                          />
+                        </div>
+                      )}
+                      <div className="flex items-start gap-4">
+                        <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                          <CheckCircle className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-lg mb-2 group-hover:text-blue-900">
+                            {condition.title}
+                          </h3>
+                          <p className="text-gray-600 text-sm line-clamp-3">
+                            {condition.shortDescription}
+                          </p>
+                          {condition.featured && (
+                            <div className="inline-flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium mt-3">
+                              <Award className="w-3 h-3" />
+                              Featured Procedure
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-2">{symptom}</h3>
-                    </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -197,27 +172,27 @@ export default async function ConditionPage({ params }: Props) {
         </section>
       )}
 
-      {/* Treatment Options */}
-      {condition.treatmentOptions && condition.treatmentOptions.length > 0 && (
-        <section className="py-20 bg-white">
+      {/* Features Section */}
+      {serviceData.features && serviceData.features.length > 0 && (
+        <section className="py-20 bg-gray-50">
           <Container>
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-16">
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
-                  Treatment Approach
+                  Our Approach
                 </h2>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {condition.treatmentOptions.map((treatment: string, index: number) => (
-                  <div key={index} className="flex items-start gap-4 p-6 bg-gray-50 rounded-xl">
+                {serviceData.features.map((feature: string, index: number) => (
+                  <div key={index} className="flex items-start gap-4 p-6 bg-white rounded-xl shadow-sm">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
                       <CheckCircle className="w-4 h-4 text-blue-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 text-lg mb-2">{treatment}</h3>
+                      <h3 className="font-semibold text-gray-900 text-lg mb-2">{feature}</h3>
                       <p className="text-gray-600 text-sm">
-                        Advanced orthopaedic techniques tailored to your specific condition.
+                        Expert care with advanced surgical techniques and personalized rehabilitation programs.
                       </p>
                     </div>
                   </div>
@@ -229,33 +204,12 @@ export default async function ConditionPage({ params }: Props) {
       )}
 
       {/* Detailed Content Section */}
-      {condition.content && (
-        <section className="py-20 bg-gray-50">
-          <Container>
-            <div className="max-w-4xl mx-auto">
-              <div className="prose prose-lg max-w-none">
-                <PortableText value={condition.content || []} />
-              </div>
-            </div>
-          </Container>
-        </section>
-      )}
-
-      {/* Recovery Section */}
-      {condition.recovery && (
+      {serviceData.content && (
         <section className="py-20 bg-white">
           <Container>
             <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
-                  Recovery & Rehabilitation
-                </h2>
-                <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                  Your journey to optimal recovery and long-term health.
-                </p>
-              </div>
               <div className="prose prose-lg max-w-none">
-                <PortableText value={condition.recovery || []} />
+                <PortableText value={serviceData.content || []} />
               </div>
             </div>
           </Container>
@@ -270,8 +224,8 @@ export default async function ConditionPage({ params }: Props) {
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
                 <Users className="w-8 h-8 text-blue-600" />
               </div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">1000+</div>
-              <p className="text-gray-600">Patients Treated</p>
+              <div className="text-4xl font-bold text-gray-900 mb-2">500+</div>
+              <p className="text-gray-600">Athletes Treated</p>
             </div>
             <div className="p-8">
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
@@ -284,37 +238,8 @@ export default async function ConditionPage({ params }: Props) {
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
                 <Award className="w-8 h-8 text-blue-600" />
               </div>
-              <div className="text-4xl font-bold text-gray-900 mb-2">98%</div>
-              <p className="text-gray-600">Success Rate</p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Related Conditions */}
-      <section className="py-20 bg-white">
-        <Container>
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
-                Related Conditions
-              </h2>
-              <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-                Explore other conditions we treat with our comprehensive orthopaedic care.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <Link href="/conditions">
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="px-8 py-4 h-auto text-lg"
-                >
-                  View All Conditions
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+              <div className="text-4xl font-bold text-gray-900 mb-2">95%</div>
+              <p className="text-gray-600">Return to Sport</p>
             </div>
           </div>
         </Container>
@@ -325,10 +250,10 @@ export default async function ConditionPage({ params }: Props) {
         <Container>
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6 font-sans">
-              Ready to Take the Next Step?
+              Ready to Get Back in the Game?
             </h2>
             <p className="text-xl text-blue-100 mb-8">
-              Schedule a consultation with Mr O&apos;Bryan to discuss your {condition.title.toLowerCase()} and develop a personalized treatment plan.
+              Schedule a consultation with Mr O&apos;Bryan to discuss your sports injury and develop a personalized treatment plan.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 

@@ -213,7 +213,7 @@ export default async function Services() {
                   ))}
                 </div>
                 
-                <Link href={`/services/${service.slug.current}`}>
+                <Link href={`/${service.slug.current}`}>
                   <Button 
                     variant="ghost" 
                     className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 p-0 h-auto font-medium group/btn"

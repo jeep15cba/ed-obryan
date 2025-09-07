@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getService, getServices } from '@/lib/sanity-queries'
+import { getServiceWithConditions, getServices } from '@/lib/sanity-queries'
 import { Container } from '@/components/ui/container'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle, Clock, Users, Award, ArrowRight, Phone } from 'lucide-react'
@@ -7,11 +7,36 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getResponsiveImageProps } from '@/lib/sanity-image'
 import { PortableText } from '@portabletext/react'
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo'
+import { Metadata } from 'next'
 
 interface ServicePageProps {
   params: Promise<{
     slug: string
   }>
+}
+
+// Generate metadata for SEO
+export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
+  const service = await getServiceWithConditions((await params).slug)
+  
+  if (!service) {
+    return {
+      title: 'Service Not Found',
+      description: 'The requested service could not be found.'
+    }
+  }
+  
+  const title = service?.seo?.metaTitle || `${service?.title} - Expert Treatment Melbourne`
+  const description = service?.seo?.metaDescription || `Expert ${service?.title?.toLowerCase()} treatment by Mr Edward O'Bryan. Advanced surgical techniques and personalized care in Melbourne.`
+  
+  return generateSEOMetadata({
+    title,
+    description,
+    seo: service?.seo,
+    slug: `/services/${(await params).slug}`,
+    imageUrl: service?.image,
+  })
 }
 
 // Generate static params for all services
@@ -35,7 +60,8 @@ function getIconComponent(iconName: string) {
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {
-  const service = await getService((await params).slug)
+  const { slug } = await params
+  const service = await getServiceWithConditions(slug)
 
   if (!service) {
     notFound()
@@ -121,9 +147,70 @@ export default async function ServicePage({ params }: ServicePageProps) {
         </section>
       )}
 
+      {/* Related Conditions/Procedures Section */}
+      {service.conditions && service.conditions.length > 0 && (
+        <section className="py-20 bg-white">
+          <Container>
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-6">
+                  <CheckCircle className="w-4 h-4" />
+                  Related Procedures
+                </div>
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 font-sans">
+                  Conditions We Treat
+                </h2>
+                <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                  Expert diagnosis and treatment for conditions related to {service.title?.toLowerCase()}.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {service.conditions.map((condition: any) => (
+                  <Link key={condition._id} href={`/${slug}/${condition.slug.current}`}>
+                    <div className="group bg-gray-50 hover:bg-blue-50 rounded-xl p-6 transition-all duration-200 hover:shadow-lg border border-transparent hover:border-blue-100">
+                      {condition.heroImage && (
+                        <div className="aspect-[4/3] rounded-lg overflow-hidden mb-4 bg-gradient-to-br from-gray-100 to-gray-200">
+                          <Image
+                            src={condition.heroImage.asset.url}
+                            alt={condition.heroImage.alt || condition.title}
+                            width={400}
+                            height={300}
+                            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-200"
+                          />
+                        </div>
+                      )}
+                      <div className="flex items-start gap-4">
+                        <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                          <CheckCircle className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 text-lg mb-2 group-hover:text-blue-900">
+                            {condition.title}
+                          </h3>
+                          <p className="text-gray-600 text-sm line-clamp-3">
+                            {condition.shortDescription}
+                          </p>
+                          {condition.featured && (
+                            <div className="inline-flex items-center gap-1 bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium mt-3">
+                              <Award className="w-3 h-3" />
+                              Featured Treatment
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </Container>
+        </section>
+      )}
+
       {/* Features Section */}
       {service.features && service.features.length > 0 && (
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-gray-50">
           <Container>
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-16">
@@ -137,8 +224,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {service.features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-4 p-6 bg-gray-50 rounded-xl">
+                {service.features.map((feature: string, index: number) => (
+                  <div key={index} className="flex items-start gap-4 p-6 bg-white rounded-xl shadow-sm">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
                       <CheckCircle className="w-4 h-4 text-blue-600" />
                     </div>
@@ -158,7 +245,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
 
       {/* Detailed Content Section */}
       {service.content && (
-        <section className="py-20 bg-gray-50">
+        <section className="py-20 bg-white">
           <Container>
             <div className="max-w-4xl mx-auto">
               <div className="prose prose-lg max-w-none">
@@ -170,7 +257,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       )}
 
       {/* Statistics Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <Container>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="p-8">

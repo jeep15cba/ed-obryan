@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Award, Star, Users } from "lucide-react";
+import { Award, Users } from "lucide-react";
 import { getHeroSection } from "@/lib/sanity-queries";
 import { getResponsiveImageProps } from "@/lib/sanity-image";
 import Image from "next/image";

@@ -39,7 +39,8 @@ export const teamMember = defineType({
     defineField({
       name: 'bio',
       title: 'Biography',
-      type: 'text',
+      type: 'array',
+      of: [{ type: 'block' }],
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -58,21 +59,15 @@ export const teamMember = defineType({
       name: 'education',
       title: 'Education',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            { name: 'degree', type: 'string', title: 'Degree' },
-            { name: 'school', type: 'string', title: 'Institution' },
-            { name: 'year', type: 'string', title: 'Year' },
-          ],
-        },
-      ],
+      of: [{ type: 'string' }],
+      description: 'List of educational qualifications (e.g., "MBBS, University of Melbourne (1995)")',
     }),
     defineField({
       name: 'experience',
-      title: 'Years of Experience',
-      type: 'number',
+      title: 'Professional Experience',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'List of professional positions and experience (e.g., "Senior Orthopaedic Surgeon, Royal Melbourne Hospital (2010-Present)")',
     }),
     defineField({
       name: 'featured',
@@ -85,6 +80,12 @@ export const teamMember = defineType({
       title: 'Display Order',
       type: 'number',
       initialValue: 0,
+    }),
+    defineField({
+      name: 'seo',
+      title: 'SEO Settings',
+      type: 'seo',
+      description: 'SEO settings for this team member page',
     }),
   ],
   preview: {

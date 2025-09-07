@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity'
+import { richTextConfig } from './richTextConfig'
 
 export const blogPost = defineType({
   name: 'blogPost',
@@ -75,11 +76,11 @@ export const blogPost = defineType({
       of: [
         {
           type: 'block',
+          styles: richTextConfig.styles,
+          lists: richTextConfig.lists,
+          marks: richTextConfig.marks,
         },
-        {
-          type: 'image',
-          options: { hotspot: true },
-        },
+        ...richTextConfig.of
       ],
       validation: (Rule) => Rule.required(),
     }),
@@ -90,14 +91,10 @@ export const blogPost = defineType({
       initialValue: false,
     }),
     defineField({
-      name: 'seoTitle',
-      title: 'SEO Title',
-      type: 'string',
-    }),
-    defineField({
-      name: 'seoDescription',
-      title: 'SEO Description',
-      type: 'text',
+      name: 'seo',
+      title: 'SEO Settings',
+      type: 'seo',
+      description: 'SEO settings for this blog post',
     }),
   ],
   preview: {
