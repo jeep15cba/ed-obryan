@@ -521,7 +521,6 @@ export default function FellowshipGlobe({ fellowshipData }: FellowshipGlobeProps
 
         // Track mouse position to distinguish between click and drag
         let mouseDownPos = { x: 0, y: 0 };
-        let mouseUpPos = { x: 0, y: 0 };
         let isDragging = false;
 
         const handleMouseDown = (event: MouseEvent) => {
@@ -544,8 +543,6 @@ export default function FellowshipGlobe({ fellowshipData }: FellowshipGlobeProps
         // No longer need this flag since we're using raycasting directly
         
         const handleMouseUp = (event: MouseEvent) => {
-          mouseUpPos.x = event.clientX;
-          mouseUpPos.y = event.clientY;
           
           if (!isDragging) {
             // Don't trigger on UI element clicks (like close button)
