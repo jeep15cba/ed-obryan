@@ -689,3 +689,320 @@ export async function getFellowshipMentors() {
   `)
 }
 
+// Elite Athlete Support Page
+export async function getEliteAthletePage() {
+  return client.fetch(`
+    *[_type == "eliteAthletePage"][0] {
+      _id,
+      title,
+      slug,
+      heroSection {
+        title,
+        subtitle,
+        backgroundImage {
+          asset->
+        }
+      },
+      introSection {
+        title,
+        content
+      },
+      approachSection {
+        title,
+        approaches[] {
+          title,
+          description,
+          icon
+        }
+      },
+      performanceGoalsSection {
+        title,
+        goals[] {
+          title,
+          description
+        }
+      },
+      advancedTechniquesSection {
+        title,
+        techniques[] {
+          title,
+          description
+        }
+      },
+      processSection {
+        title,
+        steps[] {
+          stepNumber,
+          title,
+          description
+        }
+      },
+      statisticsSection {
+        title,
+        statistics[] {
+          number,
+          label,
+          description
+        }
+      },
+      ctaSection {
+        title,
+        description,
+        buttonText,
+        buttonLink
+      },
+      seo
+    }
+  `)
+}
+
+// Patient Information Page
+export async function getPatientInfoPage() {
+  return client.fetch(`
+    *[_type == "patientInfoPage"][0] {
+      _id,
+      title,
+      slug,
+      heroSection {
+        title,
+        subtitle,
+        backgroundImage {
+          asset->
+        }
+      },
+      newPatientFormSection {
+        title,
+        description,
+        buttonText,
+        buttonLink
+      },
+      infoSections[] {
+        title,
+        icon,
+        content
+      },
+      feesSection {
+        title,
+        description,
+        consultingFees {
+          title,
+          fees[] {
+            service,
+            fee,
+            rebate
+          }
+        },
+        surgicalFees {
+          title,
+          fees[] {
+            service,
+            fee
+          },
+          notes
+        }
+      },
+      contactSection {
+        title,
+        description,
+        phoneNumber,
+        phoneDisplay,
+        email
+      },
+      seo
+    }
+  `)
+}
+
+// Contact Page
+export async function getContactPage() {
+  return client.fetch(`
+    *[_type == "contactPage"][0] {
+      _id,
+      title,
+      slug,
+      heroSection {
+        badge,
+        title,
+        subtitle,
+        primaryButton {
+          text,
+          link
+        },
+        secondaryButton {
+          text,
+          link
+        },
+        backgroundImage {
+          asset->{
+            _id,
+            url
+          },
+          alt,
+          hotspot,
+          crop
+        }
+      },
+      contactMethods {
+        phone {
+          title,
+          description,
+          number
+        },
+        email {
+          title,
+          description,
+          address
+        },
+        locations {
+          title,
+          description,
+          buttonText
+        }
+      },
+      contactForm {
+        badge,
+        title,
+        description,
+        services,
+        submitButton {
+          text
+        },
+        privacyText
+      },
+      practiceInfo {
+        badge,
+        title,
+        whyChooseUs[] {
+          title,
+          description
+        },
+        practiceHours {
+          title,
+          hours[] {
+            day,
+            time
+          },
+          emergencyText
+        },
+        reviews {
+          title,
+          rating,
+          reviewCount,
+          testimonial,
+          testimonialAuthor
+        }
+      },
+      locations {
+        badge,
+        title,
+        description,
+        locationList[] {
+          name,
+          address,
+          phone,
+          hours
+        }
+      },
+      emergencySection {
+        title,
+        description,
+        primaryButton {
+          text,
+          link
+        },
+        secondaryButton {
+          text,
+          link
+        }
+      },
+      seo {
+        title,
+        description,
+        keywords,
+        ogImage {
+          asset->{
+            _id,
+            url
+          }
+        }
+      }
+    }
+  `)
+}
+
+// Refer Page
+export async function getReferPage() {
+  return client.fetch(`
+    *[_type == "referPage"][0] {
+      _id,
+      title,
+      slug,
+      heroSection {
+        title,
+        subtitle,
+        backgroundImage {
+          asset->
+        }
+      },
+      introSection {
+        title,
+        description
+      },
+      contactMethods {
+        title,
+        healthlink,
+        email,
+        fax,
+        postalAddresses
+      },
+      snapformSection {
+        title,
+        description,
+        emailAddress
+      },
+      referralForm {
+        title,
+        practitionerFields {
+          title,
+          subtitle,
+          fields[] {
+            name,
+            label,
+            type,
+            required,
+            width
+          }
+        },
+        patientFields {
+          title,
+          fields[] {
+            name,
+            label,
+            type,
+            required,
+            width,
+            options
+          }
+        },
+        additionalFields[] {
+          name,
+          label,
+          type,
+          required,
+          width
+        },
+        submitButton {
+          text,
+          processingText
+        }
+      },
+      newPatientCTA {
+        text,
+        linkText,
+        linkUrl
+      },
+      seo
+    }
+  `)
+}
+

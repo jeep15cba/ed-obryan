@@ -102,7 +102,7 @@ const transformNavigationData = (data: SanityNavigationData): NavigationItem[] =
 			name: "Contact",
 			href: "/contact",
 			dropdown: [
-				{ name: "Refer", href: "/contact/refer" },
+				{ name: "Refer", href: "/refer" },
 			],
 		}
 	);

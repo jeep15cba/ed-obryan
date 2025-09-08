@@ -12,8 +12,38 @@ import {
   Star
 } from 'lucide-react'
 import Link from 'next/link'
+import { getContactPage } from '@/lib/sanity-queries'
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const contactData = await getContactPage()
+
+  // Fallback data
+  const heroData = contactData?.heroSection || {
+    badge: 'Get In Touch',
+    title: 'Contact Mr O\'Bryan',
+    subtitle: 'Ready to take the next step in your orthopaedic care? Contact us to schedule a consultation or learn more about our services.',
+    primaryButton: { text: 'Book Consultation', link: '#' },
+    secondaryButton: { text: 'Call 0405 556 622', link: 'tel:0405556622' }
+  }
+
+  const contactMethods = contactData?.contactMethods || {
+    phone: {
+      title: 'Phone',
+      description: 'Call us directly for immediate assistance',
+      number: '0405 556 622'
+    },
+    email: {
+      title: 'Email',
+      description: 'Send us a message and we\'ll respond promptly',
+      address: 'info@edwardobryan.com.au'
+    },
+    locations: {
+      title: 'Locations',
+      description: 'Multiple convenient locations to serve you',
+      buttonText: 'View Locations'
+    }
+  }
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -29,37 +59,39 @@ export default function ContactPage() {
           <div className="relative z-10 text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Phone className="w-4 h-4" />
-              Get In Touch
+              {heroData.badge}
             </div>
 
             <h1 className="text-4xl lg:text-6xl font-bold mb-6 font-sans leading-tight">
-              Contact 
-              <span className="block">Mr O&apos;Bryan</span>
+              {heroData.title}
             </h1>
 
             <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Ready to take the next step in your orthopaedic care? Contact us to schedule 
-              a consultation or learn more about our services.
+              {heroData.subtitle}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
                 className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 h-auto text-lg font-semibold"
+                asChild
               >
-                <Calendar className="w-5 h-5 mr-2" />
-                Book Consultation
+                <Link href={heroData.primaryButton?.link || '#'}>
+                  <Calendar className="w-5 h-5 mr-2" />
+                  {heroData.primaryButton?.text || 'Book Consultation'}
+                </Link>
               </Button>
-              <Link href="tel:0405556622">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="border-blue-400 text-white hover:bg-blue-600 px-8 py-4 h-auto text-lg w-full"
-                >
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-blue-400 text-white hover:bg-blue-600 px-8 py-4 h-auto text-lg"
+                asChild
+              >
+                <Link href={heroData.secondaryButton?.link || 'tel:0405556622'}>
                   <Phone className="w-5 h-5 mr-2" />
-                  Call 0405 556 622
-                </Button>
-              </Link>
+                  {heroData.secondaryButton?.text || 'Call 0405 556 622'}
+                </Link>
+              </Button>
             </div>
           </div>
         </Container>
@@ -74,11 +106,11 @@ export default function ContactPage() {
               <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-6">
                 <Phone className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4 font-sans">Phone</h3>
-              <p className="text-gray-600 mb-4">Call us directly for immediate assistance</p>
-              <Link href="tel:0405556622">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 font-sans">{contactMethods.phone.title}</h3>
+              <p className="text-gray-600 mb-4">{contactMethods.phone.description}</p>
+              <Link href={`tel:${contactMethods.phone.number.replace(/\s/g, '')}`}>
                 <Button variant="ghost" className="text-green-600 hover:text-green-700 font-semibold">
-                  0405 556 622
+                  {contactMethods.phone.number}
                 </Button>
               </Link>
             </div>
@@ -88,11 +120,11 @@ export default function ContactPage() {
               <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6">
                 <Mail className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4 font-sans">Email</h3>
-              <p className="text-gray-600 mb-4">Send us a message and we&apos;ll respond promptly</p>
-              <Link href="mailto:info@edwardobryan.com.au">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 font-sans">{contactMethods.email.title}</h3>
+              <p className="text-gray-600 mb-4">{contactMethods.email.description}</p>
+              <Link href={`mailto:${contactMethods.email.address}`}>
                 <Button variant="ghost" className="text-blue-600 hover:text-blue-700 font-semibold">
-                  info@edwardobryan.com.au
+                  {contactMethods.email.address}
                 </Button>
               </Link>
             </div>
@@ -102,10 +134,10 @@ export default function ContactPage() {
               <div className="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-6">
                 <MapPin className="w-8 h-8 text-orange-600" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4 font-sans">Locations</h3>
-              <p className="text-gray-600 mb-4">Multiple convenient locations to serve you</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-4 font-sans">{contactMethods.locations.title}</h3>
+              <p className="text-gray-600 mb-4">{contactMethods.locations.description}</p>
               <Button variant="ghost" className="text-orange-600 hover:text-orange-700 font-semibold">
-                View Locations
+                {contactMethods.locations.buttonText}
               </Button>
             </div>
           </div>

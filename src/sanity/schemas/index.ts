@@ -11,6 +11,10 @@ import { aboutPage } from './aboutPage'
 import { fellowshipMentor } from './fellowshipMentor'
 import { fellowshipLocation } from './fellowshipLocation'
 import { fellowshipPage } from './fellowshipPage'
+import { eliteAthletePage } from './eliteAthletePage'
+import { patientInfoPage } from './patientInfoPage'
+import { referPage } from './referPage'
+import { contactPage } from './contactPage'
 import heroSection from './heroSection'
 import aboutSection from './aboutSection'
 import servicesSection from './servicesSection'
@@ -29,6 +33,10 @@ export const schemaTypes = [
   fellowshipMentor,
   fellowshipLocation,
   fellowshipPage,
+  eliteAthletePage,
+  patientInfoPage,
+  referPage,
+  contactPage,
   heroSection, 
   aboutSection, 
   servicesSection

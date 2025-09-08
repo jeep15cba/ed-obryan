@@ -3,10 +3,183 @@ import { CheckCircle, Clock, FileText, User, CreditCard, Stethoscope, ArrowLeft,
 import { Container } from '@/components/ui/container'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { getPatientInfoPage } from '@/lib/sanity-queries'
 
 export const metadata: Metadata = {
   title: 'Patient Information | Mr Edward O\'Bryan - Orthopaedic Surgeon',
   description: 'Everything you need to know before your appointment with Mr Edward O\'Bryan. Appointment preparation, fees, and what to expect.',
+}
+
+// Fallback data for when Sanity content is not available
+const fallbackData = {
+  heroSection: {
+    title: 'Patient Information',
+    subtitle: 'Everything you need to know before your visit with Mr Edward O\'Bryan. We\'ve prepared this comprehensive guide to help ensure your appointment runs smoothly.'
+  },
+  newPatientFormSection: {
+    title: 'New Patient Form',
+    description: 'Save time at your appointment by completing your patient form online before you arrive.',
+    buttonText: 'Complete Online Form',
+    buttonLink: '/patient-form'
+  },
+  infoSections: [
+    {
+      title: 'Before Arriving',
+      icon: 'clock',
+      content: [
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'Please arrive 15 minutes early for your appointment to allow time for check-in and completion of any remaining paperwork.'
+            }
+          ]
+        },
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'If you are running late, please call our office as soon as possible. We understand that delays can happen, and we\'ll do our best to accommodate you.'
+            }
+          ]
+        },
+        {
+          _type: 'infoBox',
+          type: 'warning',
+          title: 'Please note:',
+          content: 'Late arrivals may need to be rescheduled to ensure adequate consultation time for all patients.'
+        }
+      ]
+    },
+    {
+      title: 'What to Bring',
+      icon: 'file-text',
+      content: [
+        {
+          _type: 'checklistSection',
+          title: 'Essential Documents:',
+          items: [
+            'Valid referral from your GP or specialist (Medicare requirement)',
+            'Medicare card and photo identification',
+            'Private health insurance details (if applicable)',
+            'Workers compensation or third party insurance details (if applicable)'
+          ]
+        },
+        {
+          _type: 'checklistSection',
+          title: 'Medical Information:',
+          items: [
+            'All recent imaging (X-rays, MRI, CT scans) - bring originals or CDs',
+            'Reports from previous specialists or treating doctors',
+            'List of current medications and dosages',
+            'Previous surgical reports (if relevant)'
+          ]
+        }
+      ]
+    },
+    {
+      title: 'What to Wear',
+      icon: 'user',
+      content: [
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'Please dress comfortably in loose-fitting clothing that allows easy access to the area being examined. For knee consultations, shorts or loose pants that can be easily rolled up are ideal.'
+            }
+          ]
+        },
+        {
+          _type: 'infoBox',
+          type: 'info',
+          title: 'Tip:',
+          content: 'Avoid tight-fitting jeans or clothing that may be difficult to remove if a detailed examination is required.'
+        }
+      ]
+    },
+    {
+      title: 'What to Expect',
+      icon: 'stethoscope',
+      content: [
+        {
+          _type: 'checklistSection',
+          title: 'During Your Consultation:',
+          items: [
+            'Detailed discussion of your symptoms and medical history',
+            'Physical examination of the affected area',
+            'Review of any imaging or test results you\'ve brought',
+            'Discussion of diagnosis and treatment options',
+            'Opportunity to ask questions about your condition'
+          ]
+        },
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'Initial consultations typically take 30-45 minutes, while follow-up appointments are usually 15-20 minutes. Complex cases may require additional time.',
+              marks: ['strong']
+            }
+          ]
+        },
+        {
+          _type: 'block',
+          children: [
+            {
+              _type: 'span',
+              text: 'You\'ll receive a comprehensive report sent to your referring doctor, and any recommended treatment plans or further investigations will be discussed and arranged as needed.'
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  feesSection: {
+    title: 'Consulting & Surgical Fees',
+    description: 'Transparent pricing for all consultations and procedures. Medicare rebates apply where eligible.',
+    consultingFees: {
+      title: 'Consulting Fees',
+      fees: [
+        { service: 'Initial Consultation', fee: '$450', rebate: '$100' },
+        { service: 'Follow-up Consultation', fee: '$350', rebate: '$75' },
+        { service: 'Brief Consultation', fee: '$250', rebate: '$40' }
+      ]
+    },
+    surgicalFees: {
+      title: 'Surgical Fees',
+      fees: [
+        { service: 'Arthroscopic ACL Reconstruction', fee: '$8,500 - $12,000' },
+        { service: 'Total Knee Replacement', fee: '$15,000 - $20,000' },
+        { service: 'Partial Knee Replacement', fee: '$12,000 - $16,000' },
+        { service: 'Arthroscopic Meniscal Repair', fee: '$6,000 - $8,500' },
+        { service: 'Arthroscopic Cartilage Procedures', fee: '$8,000 - $12,000' },
+        { service: 'Complex Revision Surgery', fee: 'Quote on consultation' }
+      ],
+      notes: [
+        'Surgical fees are estimates and may vary based on complexity',
+        'Hospital and anaesthetist fees are additional',
+        'Private health insurance may cover portion of fees',
+        'Payment plans available for surgical procedures'
+      ]
+    }
+  },
+  contactSection: {
+    title: 'Questions About Your Appointment?',
+    description: 'Our friendly team is here to help. Don\'t hesitate to contact us if you have any questions about your upcoming appointment or need to make changes.',
+    phoneNumber: '+61398001200',
+    phoneDisplay: '(03) 9800 1200',
+    email: 'info@edwardobryan.com.au'
+  }
+}
+
+const iconMap = {
+  clock: Clock,
+  'file-text': FileText,
+  user: User,
+  stethoscope: Stethoscope
 }
 
 interface InfoBoxProps {
@@ -73,21 +246,69 @@ function FeesTable({ title, fees }: FeesTableProps) {
   )
 }
 
-export default function PatientInfoPage() {
-  const consultingFees = [
-    { service: 'Initial Consultation', fee: '$450', rebate: '$100' },
-    { service: 'Follow-up Consultation', fee: '$350', rebate: '$75' },
-    { service: 'Brief Consultation', fee: '$250', rebate: '$40' },
-  ]
+function renderContent(content: any[]) {
+  return content.map((item, index) => {
+    if (item._type === 'block') {
+      return (
+        <p key={index} className={item.children[0]?.marks?.includes('strong') ? 'font-semibold' : ''}>
+          {item.children.map((child: any, childIndex: number) => (
+            <span key={childIndex}>{child.text}</span>
+          ))}
+        </p>
+      )
+    }
+    
+    if (item._type === 'infoBox') {
+      const colorMap = {
+        warning: 'bg-amber-50 border-amber-200 text-amber-800',
+        info: 'bg-blue-50 border-blue-200 text-blue-800',
+        success: 'bg-green-50 border-green-200 text-green-800',
+        error: 'bg-red-50 border-red-200 text-red-800'
+      }
+      
+      return (
+        <div key={index} className={`border rounded-lg p-4 mt-4 ${colorMap[item.type] || colorMap.info}`}>
+          <p className="text-sm">
+            <strong>{item.title}</strong> {item.content}
+          </p>
+        </div>
+      )
+    }
+    
+    if (item._type === 'checklistSection') {
+      return (
+        <div key={index} className="space-y-4">
+          <div>
+            <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
+            <ul className="space-y-2">
+              {item.items.map((listItem: string, itemIndex: number) => (
+                <li key={itemIndex} className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>{listItem}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )
+    }
+    
+    return null
+  })
+}
 
-  const surgicalFees = [
-    { service: 'Arthroscopic ACL Reconstruction', fee: '$8,500 - $12,000' },
-    { service: 'Total Knee Replacement', fee: '$15,000 - $20,000' },
-    { service: 'Partial Knee Replacement', fee: '$12,000 - $16,000' },
-    { service: 'Arthroscopic Meniscal Repair', fee: '$6,000 - $8,500' },
-    { service: 'Arthroscopic Cartilage Procedures', fee: '$8,000 - $12,000' },
-    { service: 'Complex Revision Surgery', fee: 'Quote on consultation' },
-  ]
+export default async function PatientInfoPage() {
+  let pageData
+  
+  try {
+    pageData = await getPatientInfoPage()
+  } catch (error) {
+    console.error('Failed to fetch Patient Info page data:', error)
+    pageData = null
+  }
+  
+  // Use Sanity data if available, otherwise use fallback
+  const data = pageData || fallbackData
 
   return (
     <div className="min-h-screen bg-white">
@@ -119,13 +340,12 @@ export default function PatientInfoPage() {
 
               {/* Title */}
               <h1 className="text-4xl lg:text-6xl font-bold mb-6 font-sans leading-tight">
-                Patient Information
+                {data.heroSection.title}
               </h1>
 
               {/* Description */}
               <p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-2xl">
-                Everything you need to know before your visit with Mr Edward O'Bryan. 
-                We've prepared this comprehensive guide to help ensure your appointment runs smoothly.
+                {data.heroSection.subtitle}
               </p>
 
               {/* CTA Buttons */}
@@ -163,13 +383,13 @@ export default function PatientInfoPage() {
                   <FileText className="w-6 h-6 text-blue-600" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">New Patient Form</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2">{data.newPatientFormSection.title}</h2>
                   <p className="text-gray-600 mb-4">
-                    Save time at your appointment by completing your patient form online before you arrive.
+                    {data.newPatientFormSection.description}
                   </p>
-                  <a href="/patient-form" className="btn-primary inline-flex items-center gap-2">
+                  <a href={data.newPatientFormSection.buttonLink} className="btn-primary inline-flex items-center gap-2">
                     <FileText className="w-4 h-4" />
-                    Complete Online Form
+                    {data.newPatientFormSection.buttonText}
                   </a>
                 </div>
               </div>
@@ -183,153 +403,41 @@ export default function PatientInfoPage() {
         <Container>
           <div className="max-w-4xl mx-auto space-y-8">
             
-            {/* Before Arriving */}
-            <InfoBox
-              icon={<Clock className="w-5 h-5" />}
-              title="Before Arriving"
-            >
-              <p>
-                Please arrive <strong>15 minutes early</strong> for your appointment to allow time for 
-                check-in and completion of any remaining paperwork.
-              </p>
-              <p>
-                If you are running late, please call our office as soon as possible. We understand 
-                that delays can happen, and we'll do our best to accommodate you.
-              </p>
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
-                <p className="text-amber-800 text-sm">
-                  <strong>Please note:</strong> Late arrivals may need to be rescheduled to ensure 
-                  adequate consultation time for all patients.
-                </p>
-              </div>
-            </InfoBox>
-
-            {/* What to Bring */}
-            <InfoBox
-              icon={<FileText className="w-5 h-5" />}
-              title="What to Bring"
-            >
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Essential Documents:</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>Valid referral from your GP or specialist (Medicare requirement)</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>Medicare card and photo identification</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>Private health insurance details (if applicable)</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>Workers compensation or third party insurance details (if applicable)</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Medical Information:</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>All recent imaging (X-rays, MRI, CT scans) - bring originals or CDs</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>Reports from previous specialists or treating doctors</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>List of current medications and dosages</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span>Previous surgical reports (if relevant)</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </InfoBox>
-
-            {/* What to Wear */}
-            <InfoBox
-              icon={<User className="w-5 h-5" />}
-              title="What to Wear"
-            >
-              <p>
-                Please dress comfortably in loose-fitting clothing that allows easy access to the 
-                area being examined. For knee consultations, shorts or loose pants that can be 
-                easily rolled up are ideal.
-              </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
-                <p className="text-blue-800 text-sm">
-                  <strong>Tip:</strong> Avoid tight-fitting jeans or clothing that may be difficult 
-                  to remove if a detailed examination is required.
-                </p>
-              </div>
-            </InfoBox>
-
-            {/* What to Expect */}
-            <InfoBox
-              icon={<Stethoscope className="w-5 h-5" />}
-              title="What to Expect"
-            >
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">During Your Consultation:</h3>
-                  <ul className="space-y-2 ml-4">
-                    <li className="text-gray-700">• Detailed discussion of your symptoms and medical history</li>
-                    <li className="text-gray-700">• Physical examination of the affected area</li>
-                    <li className="text-gray-700">• Review of any imaging or test results you've brought</li>
-                    <li className="text-gray-700">• Discussion of diagnosis and treatment options</li>
-                    <li className="text-gray-700">• Opportunity to ask questions about your condition</li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Consultation Duration:</h3>
-                  <p>
-                    Initial consultations typically take <strong>30-45 minutes</strong>, while 
-                    follow-up appointments are usually <strong>15-20 minutes</strong>. Complex cases 
-                    may require additional time.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">After Your Consultation:</h3>
-                  <p>
-                    You'll receive a comprehensive report sent to your referring doctor, and any 
-                    recommended treatment plans or further investigations will be discussed and 
-                    arranged as needed.
-                  </p>
-                </div>
-              </div>
-            </InfoBox>
+            {/* Info Sections */}
+            {data.infoSections.map((section: any, sectionIndex: number) => {
+              const IconComponent = iconMap[section.icon] || FileText
+              return (
+                <InfoBox
+                  key={sectionIndex}
+                  icon={<IconComponent className="w-5 h-5" />}
+                  title={section.title}
+                >
+                  {renderContent(section.content)}
+                </InfoBox>
+              )
+            })}
 
             {/* Fees Section */}
             <div className="space-y-6">
               <div className="text-center max-w-3xl mx-auto">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4 font-sans">
-                  Consulting & Surgical Fees
+                  {data.feesSection.title}
                 </h2>
                 <p className="text-gray-600">
-                  Transparent pricing for all consultations and procedures. Medicare rebates apply where eligible.
+                  {data.feesSection.description}
                 </p>
               </div>
 
               <div className="grid gap-8 lg:grid-cols-2">
-                <FeesTable title="Consulting Fees" fees={consultingFees} />
+                <FeesTable title={data.feesSection.consultingFees.title} fees={data.feesSection.consultingFees.fees} />
                 <div className="space-y-6">
-                  <FeesTable title="Surgical Fees" fees={surgicalFees} />
+                  <FeesTable title={data.feesSection.surgicalFees.title} fees={data.feesSection.surgicalFees.fees} />
                   <div className="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
                     <p className="font-medium text-gray-900 mb-2">Important Fee Information:</p>
                     <ul className="space-y-1">
-                      <li>• Surgical fees are estimates and may vary based on complexity</li>
-                      <li>• Hospital and anaesthetist fees are additional</li>
-                      <li>• Private health insurance may cover portion of fees</li>
-                      <li>• Payment plans available for surgical procedures</li>
+                      {data.feesSection.surgicalFees.notes.map((note: string, index: number) => (
+                        <li key={index}>• {note}</li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -338,23 +446,22 @@ export default function PatientInfoPage() {
 
             {/* Contact Information */}
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl text-white p-8 text-center">
-              <h2 className="text-2xl font-semibold mb-4">Questions About Your Appointment?</h2>
+              <h2 className="text-2xl font-semibold mb-4">{data.contactSection.title}</h2>
               <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-                Our friendly team is here to help. Don't hesitate to contact us if you have any 
-                questions about your upcoming appointment or need to make changes.
+                {data.contactSection.description}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a 
-                  href="tel:+61398001200" 
+                  href={`tel:${data.contactSection.phoneNumber}`} 
                   className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
                 >
-                  <span>(03) 9800 1200</span>
+                  <span>{data.contactSection.phoneDisplay}</span>
                 </a>
                 <a 
-                  href="mailto:info@edwardobryan.com.au" 
+                  href={`mailto:${data.contactSection.email}`} 
                   className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors"
                 >
-                  <span>info@edwardobryan.com.au</span>
+                  <span>{data.contactSection.email}</span>
                 </a>
               </div>
             </div>
