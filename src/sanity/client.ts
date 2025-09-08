@@ -25,3 +25,11 @@ export const previewClient = createClient({
   useCdn: false,
   token: process.env.SANITY_API_TOKEN,
 })
+
+export const writeClient = createClient({
+  projectId,
+  dataset,
+  apiVersion: '2024-01-01',
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+})

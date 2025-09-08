@@ -10,7 +10,8 @@
     "sanity": "sanity dev --port 3334",
     "sanity:build": "sanity build",
     "sanity:deploy": "sanity deploy",
-    "seed:navigation": "dotenv -e .env.local -- tsx src/scripts/seed-navigation.ts"
+    "seed:navigation": "dotenv -e .env.local -- tsx src/scripts/seed-navigation.ts",
+    "seed:fellowship": "node scripts/migrate-fellowship-data.js"
   },
   "dependencies": {
     "@portabletext/react": "^4.0.2",
@@ -27,7 +28,9 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "sanity": "^4.6.0",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "three": "^0.180.0",
+    "three-globe": "^2.44.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -35,6 +38,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.180.0",
     "autoprefixer": "^10.4.21",
     "dotenv": "^17.2.2",
     "dotenv-cli": "^10.0.0",

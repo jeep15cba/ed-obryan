@@ -211,7 +211,7 @@ export default async function About() {
 							})}
 						</div>
 
-						<Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+						<Button size="lg">
 							{aboutData.ctaButtonText}
 							<ArrowRight className="w-4 h-4 ml-2" />
 						</Button>

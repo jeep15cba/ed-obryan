@@ -612,3 +612,80 @@ export async function getFeaturedAboutPage(): Promise<AboutPage | null> {
   `)
 }
 
+// Fellowship Training
+export async function getFellowshipPage() {
+  return client.fetch(`
+    *[_type == "fellowshipPage" && isActive == true][0] {
+      _id,
+      title,
+      subtitle,
+      description,
+      badgeText,
+      globeTitle,
+      globeDescription,
+      locationsTitle,
+      locationsDescription,
+      fellowshipLocations[]->{
+        _id,
+        city,
+        country,
+        flag,
+        latitude,
+        longitude,
+        description,
+        color,
+        order,
+        mentors[]->{
+          _id,
+          name,
+          title,
+          description,
+          expertise,
+          "photo": photo.asset->url,
+          order
+        }
+      },
+      seo
+    }
+  `)
+}
+
+export async function getFellowshipLocations() {
+  return client.fetch(`
+    *[_type == "fellowshipLocation" && isActive == true] | order(order asc) {
+      _id,
+      city,
+      country,
+      flag,
+      latitude,
+      longitude,
+      description,
+      color,
+      order,
+      mentors[]->{
+        _id,
+        name,
+        title,
+        description,
+        expertise,
+        "photo": photo.asset->url,
+        order
+      }
+    }
+  `)
+}
+
+export async function getFellowshipMentors() {
+  return client.fetch(`
+    *[_type == "fellowshipMentor"] | order(order asc) {
+      _id,
+      name,
+      title,
+      description,
+      expertise,
+      "photo": photo.asset->url,
+      order
+    }
+  `)
+}
+

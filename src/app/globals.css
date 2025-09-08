@@ -31,7 +31,7 @@
   }
 
   .gradient-primary {
-    @apply bg-gradient-to-br from-primary to-accent;
+    @apply bg-gradient-to-br from-blue-600 to-blue-700;
   }
 
   .glassmorphism {
@@ -42,5 +42,35 @@
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Button enhancements */
+  .btn-primary {
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transition-all duration-200 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg border-2 border-blue-600 hover:bg-blue-600 hover:text-white transition-all duration-200;
+  }
+
+  /* Mobile responsive utilities */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .text-responsive-xl {
+    @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl;
+  }
+
+  .text-responsive-lg {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+
+  .spacing-responsive {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8;
   }
 }

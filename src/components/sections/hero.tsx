@@ -67,8 +67,8 @@ export default async function Hero() {
 			<div className="relative h-full">
 				{/* Blue Content Area with Curved Edge */}
 				<div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-700">
-					{/* Curved SVG Shape - Enhanced left-side design */}
-					<div className="absolute inset-0">
+					{/* Curved SVG Shape - Enhanced left-side design - Hidden on mobile for better performance */}
+					<div className="hidden lg:block absolute inset-0">
 						<svg
 							className="absolute inset-0 w-full h-full"
 							viewBox="0 0 1200 700"
@@ -87,39 +87,39 @@ export default async function Hero() {
 						</svg>
 					</div>
 
-					{/* Background Pattern - Circles on left side over blue background */}
+					{/* Background Pattern - Circles on left side over blue background - Simplified on mobile */}
 					<div className="absolute inset-0 overflow-hidden">
 						{/* Large circle pattern in left area extending upward */}
-						<div className="absolute top-0 left-1/4 w-96 h-96 bg-white/5 rounded-full -translate-y-24"></div>
-						<div className="absolute top-20 left-1/6 w-64 h-64 bg-white/3 rounded-full"></div>
-						<div className="absolute top-32 left-1/3 w-32 h-32 bg-white/8 rounded-full"></div>
-						<div className="absolute top-10 left-1/5 w-48 h-48 bg-white/4 rounded-full"></div>
-						<div className="absolute top-40 left-2/5 w-20 h-20 bg-white/6 rounded-full"></div>
+						<div className="absolute top-0 left-1/4 w-48 h-48 lg:w-96 lg:h-96 bg-white/5 rounded-full -translate-y-12 lg:-translate-y-24"></div>
+						<div className="absolute top-20 left-1/6 w-32 h-32 lg:w-64 lg:h-64 bg-white/3 rounded-full"></div>
+						<div className="hidden lg:block absolute top-32 left-1/3 w-32 h-32 bg-white/8 rounded-full"></div>
+						<div className="hidden lg:block absolute top-10 left-1/5 w-48 h-48 bg-white/4 rounded-full"></div>
+						<div className="hidden lg:block absolute top-40 left-2/5 w-20 h-20 bg-white/6 rounded-full"></div>
 
-						{/* Additional scattered circles for pattern */}
-						<div className="absolute top-60 left-1/8 w-16 h-16 bg-white/5 rounded-full"></div>
-						<div className="absolute top-5 left-1/3 w-24 h-24 bg-white/3 rounded-full"></div>
-						<div className="absolute top-72 left-1/6 w-28 h-28 bg-white/4 rounded-full"></div>
+						{/* Additional scattered circles for pattern - Desktop only */}
+						<div className="hidden lg:block absolute top-60 left-1/8 w-16 h-16 bg-white/5 rounded-full"></div>
+						<div className="hidden lg:block absolute top-5 left-1/3 w-24 h-24 bg-white/3 rounded-full"></div>
+						<div className="hidden lg:block absolute top-72 left-1/6 w-28 h-28 bg-white/4 rounded-full"></div>
 					</div>
 				</div>
 
 				{/* Content Grid */}
-				<div className="relative z-10 max-w-7xl mx-auto px-4 h-full flex items-center">
-					<div className="grid lg:grid-cols-5 gap-8 items-center py-24 w-full min-h-[90vh]">
-						{/* Left Content Area - Takes 2 columns */}
-						<div className="lg:col-span-2 text-white">
+				<div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+					<div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center py-12 sm:py-16 lg:py-24 w-full min-h-[90vh]">
+						{/* Left Content Area - Takes 2 columns on desktop, full width on mobile */}
+						<div className="lg:col-span-2 text-white text-center lg:text-left">
 							<div className="mb-6">
-								<h1 className="text-4xl lg:text-6xl font-bold leading-tight font-sans">
+								<h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight font-sans">
 									{heroData.title}
 								</h1>
 								{heroData.secondTitle && (
-									<h2 className="text-4xl lg:text-6xl font-bold leading-tight font-sans">
+									<h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight font-sans">
 										{heroData.secondTitle}
 									</h2>
 								)}
 							</div>
 
-							<p className="text-xl text-blue-100 mb-8 leading-relaxed max-w-lg">
+							<p className="text-lg sm:text-xl text-blue-100 mb-8 leading-relaxed max-w-lg mx-auto lg:mx-0">
 								{heroData.subtitle}
 							</p>
 
@@ -133,12 +133,12 @@ export default async function Hero() {
 							</div>
 
 							{/* Professional Info Card */}
-							<div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 max-w-md">
+							<div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 max-w-md mx-auto lg:mx-0">
 								<div className="flex items-center gap-4 mb-4">
 									<div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">
 										<Award className="w-6 h-6 text-white" />
 									</div>
-									<div>
+									<div className="text-left">
 										<h4 className="font-bold text-white text-lg">
 											{heroData.doctorName}
 										</h4>
@@ -147,16 +147,16 @@ export default async function Hero() {
 										</p>
 									</div>
 								</div>
-								<p className="text-blue-100 text-sm leading-relaxed">
+								<p className="text-blue-100 text-sm leading-relaxed text-left">
 									{heroData.description}
 								</p>
 							</div>
 						</div>
 
-						{/* Right Image Area - Takes 3 columns */}
-						<div className="lg:col-span-3 relative h-full">
-							{/* Medical Image Container - Much larger and taller */}
-							<div className="aspect-[3/2] lg:aspect-[4/3] rounded-2xl overflow-hidden relative h-full min-h-[500px] lg:min-h-[600px]">
+						{/* Right Image Area - Takes 3 columns on desktop, full width on mobile */}
+						<div className="lg:col-span-3 relative h-full order-first lg:order-last">
+							{/* Medical Image Container - Mobile optimized sizing */}
+							<div className="aspect-[4/3] sm:aspect-[3/2] lg:aspect-[4/3] rounded-2xl overflow-hidden relative h-full min-h-[300px] sm:min-h-[400px] lg:min-h-[600px]">
 								{heroData.heroImage ? (
 									(() => {
 										const imageProps =

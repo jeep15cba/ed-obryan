@@ -177,26 +177,26 @@ export default function Header() {
 
 	return (
 		<>
-			{/* Top Banner */}
-			<div className="fixed top-0 w-full z-50 bg-gray-800 text-white">
-				<div className="max-w-7xl mx-auto px-4">
+			{/* Top Banner - Hidden on mobile for better space utilization */}
+			<div className="hidden sm:block fixed top-0 w-full z-50 bg-gray-800 text-white">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex items-center justify-between py-2 text-sm">
 						<div className="flex items-center space-x-4">
-							<span>Expert Orthopaedic Care Available</span>
+							<span className="text-xs sm:text-sm">Expert Orthopaedic Care Available</span>
 						</div>
 						<div className="hidden md:flex items-center space-x-4">
-							<span>Follow us:</span>
+							<span className="text-xs">Follow us:</span>
 							<div className="flex space-x-2">
-								<div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-xs">
+								<div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-xs font-medium hover:bg-blue-700 transition-colors cursor-pointer">
 									f
 								</div>
-								<div className="w-5 h-5 bg-gray-600 rounded flex items-center justify-center text-xs">
+								<div className="w-6 h-6 bg-gray-600 rounded flex items-center justify-center text-xs font-medium hover:bg-gray-700 transition-colors cursor-pointer">
 									x
 								</div>
-								<div className="w-5 h-5 bg-blue-700 rounded flex items-center justify-center text-xs">
+								<div className="w-6 h-6 bg-blue-700 rounded flex items-center justify-center text-xs font-medium hover:bg-blue-800 transition-colors cursor-pointer">
 									in
 								</div>
-								<div className="w-5 h-5 bg-pink-600 rounded flex items-center justify-center text-xs">
+								<div className="w-6 h-6 bg-pink-600 rounded flex items-center justify-center text-xs font-medium hover:bg-pink-700 transition-colors cursor-pointer">
 									ig
 								</div>
 							</div>
@@ -205,16 +205,16 @@ export default function Header() {
 				</div>
 			</div>
 
-			{/* Main Header */}
-			<header className="fixed top-10 w-full z-40 bg-white border-b border-gray-200 shadow-sm">
-				<div className="max-w-7xl mx-auto px-4">
-					<div className="flex items-center justify-between py-6">
-						{/* Logo */}
+			{/* Main Header - Mobile-first positioning */}
+			<header className="fixed top-0 sm:top-10 w-full z-40 bg-white border-b border-gray-200 shadow-sm">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<div className="flex items-center justify-between py-4 sm:py-6">
+						{/* Logo - Responsive sizing */}
 						<Link
 							href="/"
 							className="flex items-center space-x-3 flex-shrink-0"
 						>
-							<div className="text-2xl font-bold text-blue-600 font-sans">
+							<div className="text-xl sm:text-2xl font-bold text-blue-600 font-sans">
 								Edward O&apos;Bryan
 							</div>
 						</Link>
@@ -271,23 +271,24 @@ export default function Header() {
 							))}
 						</nav>
 
-						{/* CTA Section */}
-						<div className="hidden lg:flex items-center space-x-6 flex-shrink-0">
-							<div className="flex items-center space-x-2 text-gray-600">
+						{/* CTA Section - Better mobile handling */}
+						<div className="hidden md:flex items-center space-x-4 lg:space-x-6 flex-shrink-0">
+							<div className="hidden lg:flex items-center space-x-2 text-gray-600">
 								<Phone className="w-4 h-4" />
 								<span className="text-sm font-medium">
 									0405 556 622
 								</span>
 							</div>
-							<Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
+							<Button size="lg">
 								Book Appointment
 							</Button>
 						</div>
 
-						{/* Mobile menu button */}
+						{/* Mobile menu button - Better touch target */}
 						<button
 							onClick={() => setIsMenuOpen(!isMenuOpen)}
-							className="lg:hidden p-2 text-gray-600 hover:text-gray-900"
+							className="md:hidden p-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+							aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
 						>
 							{isMenuOpen ? (
 								<X className="w-6 h-6" />
@@ -297,27 +298,27 @@ export default function Header() {
 						</button>
 					</div>
 
-					{/* Mobile Navigation */}
+					{/* Mobile Navigation - Enhanced touch targets and spacing */}
 					{isMenuOpen && (
-						<div className="lg:hidden border-t border-gray-100 bg-white">
-							<div className="py-4 space-y-1">
+						<div className="md:hidden border-t border-gray-100 bg-white shadow-lg">
+							<div className="py-4 space-y-1 max-h-[70vh] overflow-y-auto">
 								{navigation.map((item) => (
 									<div key={item.name}>
 										<Link
 											href={item.href}
-											className="block px-4 py-2 text-gray-600 hover:text-gray-900 font-medium"
+											className="block px-6 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 font-medium transition-colors text-base"
 											onClick={() => setIsMenuOpen(false)}
 										>
 											{item.name}
 										</Link>
 										{item.dropdown && (
-											<div className="ml-4 space-y-1">
+											<div className="bg-gray-50 border-l-4 border-blue-200 space-y-1">
 												{item.dropdown.map(
 													(subItem) => (
 														<Link
 															key={subItem.name}
 															href={subItem.href}
-															className="block px-4 py-1 text-sm text-gray-500 hover:text-gray-700"
+															className="block px-8 py-2 text-sm text-gray-500 hover:text-gray-700 hover:bg-white transition-colors"
 															onClick={() =>
 																setIsMenuOpen(
 																	false
@@ -332,8 +333,15 @@ export default function Header() {
 										)}
 									</div>
 								))}
-								<div className="px-4 pt-4">
-									<Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+								{/* Mobile Contact Info */}
+								<div className="px-6 pt-4 border-t border-gray-100 mt-4">
+									<div className="flex items-center space-x-2 text-gray-600 mb-4 justify-center">
+										<Phone className="w-4 h-4" />
+										<span className="text-sm font-medium">
+											0405 556 622
+										</span>
+									</div>
+									<Button size="lg" className="w-full">
 										Book Appointment
 									</Button>
 								</div>

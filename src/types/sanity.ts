@@ -215,3 +215,43 @@ export interface AboutPage {
   featured?: boolean
   seo?: SEO
 }
+
+export interface FellowshipMentor {
+  _id: string
+  name: string
+  title: string
+  slug: { current: string }
+  description: string
+  expertise: string[]
+  photo?: string
+  order: number
+}
+
+export interface FellowshipLocation {
+  _id: string
+  city: string
+  country: string
+  flag: string
+  latitude: number
+  longitude: number
+  description: string
+  color: string
+  mentors: FellowshipMentor[]
+  order: number
+  isActive: boolean
+}
+
+export interface FellowshipPage {
+  _id: string
+  title: string
+  subtitle: string
+  description: string[]
+  badgeText: string
+  globeTitle: string
+  globeDescription: string
+  locationsTitle: string
+  locationsDescription: string
+  fellowshipLocations: FellowshipLocation[]
+  isActive: boolean
+  seo?: SEO
+}

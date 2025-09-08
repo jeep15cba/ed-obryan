@@ -8,6 +8,9 @@ import { navigationItem } from './navigationItem'
 import { seo } from './seo'
 import { siteSettings } from './siteSettings'
 import { aboutPage } from './aboutPage'
+import { fellowshipMentor } from './fellowshipMentor'
+import { fellowshipLocation } from './fellowshipLocation'
+import { fellowshipPage } from './fellowshipPage'
 import heroSection from './heroSection'
 import aboutSection from './aboutSection'
 import servicesSection from './servicesSection'
@@ -23,6 +26,9 @@ export const schemaTypes = [
   seo,
   siteSettings,
   aboutPage,
+  fellowshipMentor,
+  fellowshipLocation,
+  fellowshipPage,
   heroSection, 
   aboutSection, 
   servicesSection
