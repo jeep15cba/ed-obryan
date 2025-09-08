@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { ArrowLeft, ArrowRight, Phone, Trophy, Users, Target, CheckCircle, Clock, Activity, Zap, Award, Shield } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Phone, Trophy, Users, Target, Activity, Zap, Award, Shield } from 'lucide-react'
 import { Container } from '@/components/ui/container'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -258,9 +258,9 @@ export default async function EliteAthletePage() {
               </h2>
               
               <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6">
-                {data.introSection.content.map((block, index) => (
+                {data.introSection.content.map((block: any, index: number) => (
                   <p key={index}>
-                    {block.children.map((child, childIndex) => (
+                    {block.children.map((child: any, childIndex: number) => (
                       <span key={childIndex}>{child.text}</span>
                     ))}
                   </p>
@@ -274,7 +274,7 @@ export default async function EliteAthletePage() {
                 {data.approachSection.title}
               </h2>
               <div className="grid md:grid-cols-3 gap-8">
-                {data.approachSection.approaches.map((approach, index) => {
+                {data.approachSection.approaches.map((approach: any, index: number) => {
                   const IconComponent = iconMap[approach.icon] || Target
                   return (
                     <div key={index} className="bg-gray-50 rounded-xl p-8 text-center">
