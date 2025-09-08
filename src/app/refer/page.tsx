@@ -169,7 +169,7 @@ export default async function ReferPage() {
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Postal Address</h3>
                 <div className="text-orange-600 text-sm space-y-1">
-                  {data.contactMethods.postalAddresses.map((address, index) => (
+                  {data.contactMethods.postalAddresses.map((address: string, index: number) => (
                     <p key={index}>{address}</p>
                   ))}
                 </div>

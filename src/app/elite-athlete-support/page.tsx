@@ -275,7 +275,7 @@ export default async function EliteAthletePage() {
               </h2>
               <div className="grid md:grid-cols-3 gap-8">
                 {data.approachSection.approaches.map((approach: any, index: number) => {
-                  const IconComponent = iconMap[approach.icon] || Target
+                  const IconComponent = iconMap[approach.icon as keyof typeof iconMap] || Target
                   return (
                     <div key={index} className="bg-gray-50 rounded-xl p-8 text-center">
                       <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6 mx-auto">
@@ -297,7 +297,7 @@ export default async function EliteAthletePage() {
                 {data.performanceGoalsSection.title}
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
-                {data.performanceGoalsSection.goals.map((goal, index) => (
+                {data.performanceGoalsSection.goals.map((goal: any, index: number) => (
                   <div key={index} className="border border-gray-200 rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">{goal.title}</h3>
                     <p className="text-gray-600 leading-relaxed">{goal.description}</p>
@@ -312,7 +312,7 @@ export default async function EliteAthletePage() {
                 {data.advancedTechniquesSection.title}
               </h2>
               <div className="grid md:grid-cols-2 gap-6">
-                {data.advancedTechniquesSection.techniques.map((technique, index) => (
+                {data.advancedTechniquesSection.techniques.map((technique: any, index: number) => (
                   <div key={index} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">{technique.title}</h3>
                     <p className="text-gray-600 leading-relaxed">{technique.description}</p>
@@ -339,7 +339,7 @@ export default async function EliteAthletePage() {
             </div>
 
             <div className="space-y-8">
-              {data.processSection.steps.map((step, index) => (
+              {data.processSection.steps.map((step: any, index: number) => (
                 <div key={index} className="flex gap-6 items-start">
                   <div className="flex-shrink-0">
                     <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
@@ -369,7 +369,7 @@ export default async function EliteAthletePage() {
             </p>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {data.statisticsSection.statistics.map((stat, index) => (
+              {data.statisticsSection.statistics.map((stat: any, index: number) => (
                 <div key={index} className="text-center">
                   <div className="text-4xl lg:text-5xl font-bold text-blue-600 mb-2">
                     {stat.number}

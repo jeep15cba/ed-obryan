@@ -267,7 +267,7 @@ function renderContent(content: any[]) {
       }
       
       return (
-        <div key={index} className={`border rounded-lg p-4 mt-4 ${colorMap[item.type] || colorMap.info}`}>
+        <div key={index} className={`border rounded-lg p-4 mt-4 ${colorMap[item.type as keyof typeof colorMap] || colorMap.info}`}>
           <p className="text-sm">
             <strong>{item.title}</strong> {item.content}
           </p>
@@ -405,7 +405,7 @@ export default async function PatientInfoPage() {
             
             {/* Info Sections */}
             {data.infoSections.map((section: any, sectionIndex: number) => {
-              const IconComponent = iconMap[section.icon] || FileText
+              const IconComponent = iconMap[section.icon as keyof typeof iconMap] || FileText
               return (
                 <InfoBox
                   key={sectionIndex}
