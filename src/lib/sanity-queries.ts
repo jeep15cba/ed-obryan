@@ -343,10 +343,11 @@ export async function getNavigationData() {
           title,
           slug,
           order,
-          "conditions": *[_type == "condition" && service._ref == ^._id && featured == true] | order(title asc) | limit(10) {
+          "conditions": *[_type == "condition" && service._ref == ^._id] | order(featured desc, title asc) [0...10] {
             _id,
             title,
-            slug
+            slug,
+            featured
           }
         }
       }
