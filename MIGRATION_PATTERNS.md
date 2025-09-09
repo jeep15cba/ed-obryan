@@ -96,6 +96,7 @@ Add corresponding npm scripts to `package.json`:
 - `scripts/migrate-fellowship-data.js` - Fellowship page and locations
 - `scripts/migrate-refer-data.js` - Refer page with form configuration
 - `scripts/migrate-contact-data.js` - Contact page with all sections
+- `scripts/migrate-footer-data.js` - Footer configuration with navigation links
 
 ## Key Points
 1. Always use `createOrReplace()` for updates to handle existing documents
