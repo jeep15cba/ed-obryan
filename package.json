@@ -13,7 +13,8 @@
     "seed:navigation": "dotenv -e .env.local -- tsx src/scripts/seed-navigation.ts",
     "seed:fellowship": "dotenv -e .env.local -- tsx scripts/migrate-fellowship-data.ts",
     "seed:refer": "node scripts/migrate-refer-data.js",
-    "seed:contact": "node scripts/migrate-contact-data.js"
+    "seed:contact": "node scripts/migrate-contact-data.js",
+    "seed:footer": "node scripts/migrate-footer-data.js"
   },
   "dependencies": {
     "@portabletext/react": "^4.0.2",

@@ -15,6 +15,7 @@ import { eliteAthletePage } from './eliteAthletePage'
 import { patientInfoPage } from './patientInfoPage'
 import { referPage } from './referPage'
 import { contactPage } from './contactPage'
+import { footerConfig } from './footerConfig'
 import heroSection from './heroSection'
 import aboutSection from './aboutSection'
 import servicesSection from './servicesSection'
@@ -37,6 +38,7 @@ export const schemaTypes = [
   patientInfoPage,
   referPage,
   contactPage,
+  footerConfig,
   heroSection, 
   aboutSection, 
   servicesSection

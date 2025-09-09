@@ -1006,3 +1006,65 @@ export async function getReferPage() {
   `)
 }
 
+
+
+export async function getFooterConfig() {
+  return client.fetch(`
+    *[_type == "footerConfig"][0] {
+      _id,
+      title,
+      companyInfo {
+        logo {
+          text,
+          initials
+        },
+        description,
+        contactInfo {
+          phone,
+          email,
+          address,
+          hours
+        }
+      },
+      navigation {
+        services {
+          title,
+          links[] {
+            name,
+            href
+          }
+        },
+        company {
+          title,
+          links[] {
+            name,
+            href
+          }
+        },
+        resources {
+          title,
+          links[] {
+            name,
+            href
+          }
+        }
+      },
+      cta {
+        buttonText,
+        buttonLink
+      },
+      socialMedia[] {
+        platform,
+        url
+      },
+      bottomFooter {
+        copyrightText,
+        legalLinks[] {
+          name,
+          href
+        }
+      },
+      seo
+    }
+  `)
+}
