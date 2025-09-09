@@ -75,3 +75,25 @@ If development environment breaks:
 2. Use separate terminals for different services
 3. Always clean `.next` folder if environment gets corrupted
 4. Test builds only when you need to verify deployment readiness
+
+## Performance Testing
+When testing navigation and header performance:
+
+1. **Test with fresh browser session** to simulate first-time visitors
+2. **Monitor Network tab** for navigation API calls:
+   - Should be minimal on initial load (server-side pre-fetch)
+   - Check cache headers on `/api/navigation` endpoint
+3. **Verify dropdown functionality** across all navigation items
+4. **Test fallback behavior** by temporarily disabling Sanity
+
+### Performance Monitoring Commands
+```bash
+# Test navigation API performance
+curl -w "@curl-format.txt" -s -o /dev/null http://localhost:3006/api/navigation
+
+# Monitor cache headers
+curl -I http://localhost:3006/api/navigation
+
+# Test server-side navigation pre-fetch
+curl -s http://localhost:3006 | grep -o "dropdown.*items"
+```

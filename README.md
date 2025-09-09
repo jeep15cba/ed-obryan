@@ -1,4 +1,14 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ed O'Bryan Orthopaedic Surgeon Website
+
+A high-performance Next.js website for orthopaedic surgeon practice management, featuring comprehensive CMS integration, advanced navigation, and optimized performance.
+
+## Features
+
+- **Performance Optimized Navigation**: Server-side pre-fetched navigation data with smart caching
+- **Sanity CMS Integration**: Full content management for services, conditions, team members, and pages
+- **Dynamic Navigation**: Auto-populated dropdowns based on services and conditions
+- **Responsive Design**: Mobile-first design with optimized user experience
+- **SEO Optimized**: Comprehensive SEO meta data management
 
 ## Getting Started
 
@@ -14,11 +24,30 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3006](http://localhost:3006) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Architecture
+
+### Performance Optimizations
+
+The header navigation system implements several performance optimizations:
+
+- **Server-Side Pre-fetching**: Navigation data is fetched at the server level during page generation
+- **Smart Caching**: Multi-layer caching with route-level revalidation and HTTP cache headers
+- **Conditional Loading**: Client-side API calls only occur when server data is unavailable
+- **Optimized Queries**: Reduced GROQ query complexity with proper slice notation
+- **Layout Shift Prevention**: Navigation state initializes with server data to prevent CLS
+
+### Navigation System
+
+The navigation system supports both manual and auto-populated dropdown menus:
+
+- **Manual Dropdowns**: Statically defined dropdown items (e.g., About, Contact)
+- **Service-Based Dropdowns**: Auto-populated with related conditions/procedures
+- **Featured Content**: Prioritizes featured items in dropdown lists
+- **Responsive Menus**: Touch-optimized mobile navigation
 
 ## Learn More
 
