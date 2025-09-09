@@ -324,12 +324,12 @@ export async function getCondition(slug: string) {
   `, { slug })
 }
 
-// Navigation
+// Navigation - Optimized query with reduced nesting
 export async function getNavigationData() {
   try {
     const result = await client.fetch(`
       {
-        "navigationItems": *[_type == "navigation" && isActive == true][0].items[] | order(order asc) {
+        "navigationItems": *[_type == "navigation" && isActive == true][0].items[isActive != false] | order(order asc) {
           title,
           href,
           order,
@@ -343,15 +343,16 @@ export async function getNavigationData() {
           title,
           slug,
           order,
-          "conditions": *[_type == "condition" && service._ref == ^._id] | order(featured desc, title asc) {
+          "conditions": *[_type == "condition" && service._ref == ^._id && featured == true] | order(title asc) | limit(10) {
             _id,
             title,
-            slug,
-            featured
+            slug
           }
         }
       }
-    `);
+    `, {}, {
+      next: { revalidate: 3600 } // Cache for 1 hour
+    });
     return result;
   } catch (error) {
     console.error('❌ [SERVER] getNavigationData query failed:', error);

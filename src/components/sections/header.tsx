@@ -7,6 +7,10 @@ import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavigationItem, SanityNavigationData, SanityNavigationService, SanityNavigationItem } from "@/types/sanity";
 
+interface HeaderProps {
+  initialNavigationData?: SanityNavigationData | null;
+}
+
 // Transform Sanity navigation data to NavigationItem format
 const transformNavigationData = (data: SanityNavigationData): NavigationItem[] => {
 	const navigationItems: NavigationItem[] = [];
@@ -122,10 +126,16 @@ const fallbackNavigation: NavigationItem[] = [
 	{ name: "Contact", href: "/contact" },
 ];
 
-export default function Header() {
+export default function Header({ initialNavigationData }: HeaderProps) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-	const [navigation, setNavigation] = useState<NavigationItem[]>(fallbackNavigation);
+	const [navigation, setNavigation] = useState<NavigationItem[]>(() => {
+		// Use initial data if available, otherwise fallback
+		if (initialNavigationData && initialNavigationData.services) {
+			return transformNavigationData(initialNavigationData);
+		}
+		return fallbackNavigation;
+	});
 	const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	const handleMouseEnter = (itemName: string) => {
@@ -142,38 +152,40 @@ export default function Header() {
 	};
 
 	useEffect(() => {
-		// Fetch navigation from Sanity with fallback to static navigation
-		const fetchNavigation = async () => {
-			try {
-				const response = await fetch('/api/navigation');
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				
-				const navigationData = await response.json();
-				
-				if (navigationData && navigationData.services && !navigationData.error) {
-					const dynamicNavigation = transformNavigationData(navigationData);
-					setNavigation(dynamicNavigation);
-					console.log('✅ Successfully loaded dynamic navigation from Sanity:', dynamicNavigation.length, 'items');
-				} else {
-					console.log('📋 Using fallback navigation - no services data from Sanity');
+		// Only fetch if we don't have initial navigation data
+		if (!initialNavigationData) {
+			const fetchNavigation = async () => {
+				try {
+					const response = await fetch('/api/navigation');
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					
+					const navigationData = await response.json();
+					
+					if (navigationData && navigationData.services && !navigationData.error) {
+						const dynamicNavigation = transformNavigationData(navigationData);
+						setNavigation(dynamicNavigation);
+						console.log('✅ Successfully loaded dynamic navigation from Sanity:', dynamicNavigation.length, 'items');
+					} else {
+						console.log('📋 Using fallback navigation - no services data from Sanity');
+						setNavigation(fallbackNavigation);
+					}
+				} catch (error) {
+					console.error('❌ Error loading navigation from Sanity:', error);
 					setNavigation(fallbackNavigation);
 				}
-			} catch (error) {
-				console.error('❌ Error loading navigation from Sanity:', error);
-				setNavigation(fallbackNavigation);
-			}
-		};
+			};
 
-		fetchNavigation();
+			fetchNavigation();
+		}
 		
 		return () => {
 			if (dropdownTimeoutRef.current) {
 				clearTimeout(dropdownTimeoutRef.current);
 			}
 		};
-	}, []);
+	}, [initialNavigationData]);
 
 	return (
 		<>
